@@ -21,6 +21,21 @@ const works = [
 ];
 
 const WorkGrid = () => {
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 },
+  };
+
   return (
     <section id="work" className="section-padding bg-soft-light">
       <div className="container mx-auto">
@@ -31,35 +46,69 @@ const WorkGrid = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <span className="text-soft-gray text-sm font-medium">PORTFOLIO</span>
-          <h2 className="text-3xl md:text-4xl font-bold mt-2">Selected Works</h2>
+          <motion.span
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-soft-gray text-sm font-medium"
+          >
+            PORTFOLIO
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-3xl md:text-4xl font-bold mt-2"
+          >
+            Selected Works
+          </motion.h2>
         </motion.div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
           {works.map((work, index) => (
             <motion.div
               key={work.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-              className="group relative overflow-hidden rounded-lg shadow-lg hover-scale"
+              variants={item}
+              whileHover={{ 
+                y: -10,
+                transition: { duration: 0.2 }
+              }}
+              className="group relative overflow-hidden rounded-lg shadow-lg"
             >
               <div className="relative aspect-[4/3]">
-                <img
+                <motion.img
                   src={work.image}
                   alt={work.title}
                   className="object-cover w-full h-full"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.3 }}
                 />
-                <div className="absolute inset-0 bg-soft-dark bg-opacity-0 group-hover:bg-opacity-80 transition-all duration-300 flex items-center justify-center">
-                  <div className="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 text-center text-white p-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute inset-0 bg-soft-dark bg-opacity-80 flex items-center justify-center"
+                >
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    whileHover={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-center text-white p-4"
+                  >
                     <h3 className="text-xl font-bold mb-2">{work.title}</h3>
                     <p className="text-sm">{work.category}</p>
-                  </div>
-                </div>
+                  </motion.div>
+                </motion.div>
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
