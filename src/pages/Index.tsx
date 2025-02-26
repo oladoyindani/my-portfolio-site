@@ -3,6 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import WorkGrid from "@/components/WorkGrid";
 import About from "@/components/About";
 import Contact from "@/components/Contact";
+import { Toaster } from "sonner";
 
 const Index = () => {
   return (
@@ -11,6 +12,7 @@ const Index = () => {
       <WorkGrid />
       <About />
       <Contact />
+      <Toaster position="top-right" />
     </main>
   );
 };

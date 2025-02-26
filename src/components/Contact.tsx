@@ -1,5 +1,13 @@
 
 import { motion } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+type FormData = {
+  name: string;
+  email: string;
+  message: string;
+};
 
 const Contact = () => {
   const container = {
@@ -15,6 +23,26 @@ const Contact = () => {
   const item = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 },
+  };
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      // Here you would typically send the form data to your backend
+      // For now, we'll just simulate a successful submission
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast.success("Thank you for your message! I'll get back to you soon.");
+      reset();
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -50,6 +78,7 @@ const Contact = () => {
             whileInView="show"
             viewport={{ once: true }}
             className="space-y-6"
+            onSubmit={handleSubmit(onSubmit)}
           >
             <motion.div variants={item}>
               <motion.input
@@ -57,7 +86,11 @@ const Contact = () => {
                 type="text"
                 placeholder="Your Name"
                 className="w-full p-3 rounded-lg border border-soft-gray/20 focus:outline-none focus:border-soft-dark transition-all"
+                {...register("name", { required: "Name is required" })}
               />
+              {errors.name && (
+                <p className="text-red-500 text-sm mt-1 text-left">{errors.name.message}</p>
+              )}
             </motion.div>
             <motion.div variants={item}>
               <motion.input
@@ -65,7 +98,17 @@ const Contact = () => {
                 type="email"
                 placeholder="Your Email"
                 className="w-full p-3 rounded-lg border border-soft-gray/20 focus:outline-none focus:border-soft-dark transition-all"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address",
+                  },
+                })}
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1 text-left">{errors.email.message}</p>
+              )}
             </motion.div>
             <motion.div variants={item}>
               <motion.textarea
@@ -73,7 +116,11 @@ const Contact = () => {
                 placeholder="Your Message"
                 rows={4}
                 className="w-full p-3 rounded-lg border border-soft-gray/20 focus:outline-none focus:border-soft-dark transition-all"
+                {...register("message", { required: "Message is required" })}
               ></motion.textarea>
+              {errors.message && (
+                <p className="text-red-500 text-sm mt-1 text-left">{errors.message.message}</p>
+              )}
             </motion.div>
             <motion.div variants={item}>
               <motion.button
